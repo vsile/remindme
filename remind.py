@@ -9,7 +9,7 @@ import sys
 
 def get_args_cmd():
     args = string.join(sys.argv[1:],'\\ ') # получаем переменную из соседнего файла bash
-    return args if args else "Через\ 15\ минут\ "
+    return args if args else "Через 15 минут "
 
 def replace_all(t, d): # общая функция для подмены переменных
     for i, j in d.iteritems():
@@ -49,6 +49,13 @@ def get_clock(text):
         how = ''
         delclock = ''
     return (how, delclock)
+
+def add_task(out, x):
+    #для отладки, чтобы долго не ждать
+    #x = 'at now'
+
+    cmd = 'echo "DISPLAY=:0 ~/remindme/task %s" | %s' % (out, x)
+    subprocess.Popen(cmd, shell=True)
 
 def main():
     warn_cmd = [
@@ -90,13 +97,8 @@ def main():
                 wors = {'Через %s %s' % (what[1],delclock):'','через %s %s' % (what[1],delclock):'','В %s ' % what[1]:'','в %s ' % what[1]:'', '%s' % delday:'', 'Через час':'', 'через час':'', '%s' % delwhatdate:'',} # какие слова мы будем удалять
                 x = replace_all(what[0], reps) # это время, на которое запланировано появление напоминания
                 out = replace_all(text, wors) # это текст напоминания
-                com = subprocess.check_output([
-                    'echo',
-                    'DISPLAY=:0',
-                    '~/remindme/task %s | %s' % (out,x)
-                    ])
-                #для отладки, чтобы долго не ждать
-                #com = subprocess.check_output('echo DISPLAY=:0 ~/remindme/task %s | at now + 0 min' % out) 
+
+                add_task(out, x)
                 loop = False
 
             else:
