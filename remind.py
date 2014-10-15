@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # RemindMe v1.1 created by Dennis Smal' in 2014 godgrace@mail.ru
 
-import commands
+import subprocess
 import string
 import re
 import sys
@@ -12,11 +12,24 @@ def get_args_cmd():
     return args if args else "Через\ 15\ минут\ "
 
 def main():
+    warn_cmd = [
+            'zenity',
+            '--warning',
+            '--text="Попробуйте ещё раз.."'
+            ]
     filltext = get_args_cmd()
+    cmd = [
+            'zenity',
+            '--entry',
+            '--title="Напоминалка"',
+            '--text="Введите напоминание"',
+            '--entry-text=%s' % filltext,
+            '--width=400'
+            ]
+
     loop = True
     while loop:
-        op='zenity --entry --title="Напоминалка" --text="Введите напоминание" --entry-text=%s --width=400' % filltext
-        get = commands.getstatusoutput(op)[1] # получаем текст
+        get = subprocess.check_output(cmd) # получаем текст
         text = get+' ' # добавляем в конец пробел, чтобы отрабатывать уведомления типа "напомнить мне через 10 минут". Если бы пробела не было, параметр clock был бы пуст. В параметре clock после слова "час" тоже стоит пробел, чтобы различать поиск "час" и "часов".
         find = re.findall('ерез [0-9]+|В [0-9:-]+|в [0-9:-]+|ерез час',text)
         day = re.findall('завтра|понедельник|вторник|среду|четверг|пятницу|субботу|воскресенье',text)
@@ -70,13 +83,17 @@ def main():
                 wors = {'Через %s %s' % (what[1],delclock):'','через %s %s' % (what[1],delclock):'','В %s ' % what[1]:'','в %s ' % what[1]:'', '%s' % delday:'', 'Через час':'', 'через час':'', '%s' % delwhatdate:'',} # какие слова мы будем удалять
                 x = replace_all(what[0], reps) # это время, на которое запланировано появление напоминания
                 out = replace_all(text, wors) # это текст напоминания
-                com = commands.getstatusoutput('echo DISPLAY=:0 ~/remindme/task %s | %s' % (out,x))
+                com = subprocess.check_output([
+                    'echo',
+                    'DISPLAY=:0',
+                    '~/remindme/task %s | %s' % (out,x)
+                    ])
                 #для отладки, чтобы долго не ждать
-                #com = commands.getstatusoutput('echo DISPLAY=:0 ~/remindme/task %s | at now + 0 min' % out) 
+                #com = subprocess.check_output('echo DISPLAY=:0 ~/remindme/task %s | at now + 0 min' % out) 
                 loop = False
 
             else:
-                error = commands.getstatusoutput('zenity --warning --text="Попробуйте ещё раз.."')
+                error = subprocess.check_output(warn_cmd)
         else:
             loop = False
 
