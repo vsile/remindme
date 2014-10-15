@@ -1,11 +1,11 @@
 remindme
 ========
 
-"Remindme" allows you to create simple reminders in Russian.
+"RemindMe" allows you to create simple reminders in Russian.
 
-"Remindme" позволяет создавать простые напоминания на русском языке.
+"RemindMe" позволяет создавать простые напоминания на русском языке.
 Например "через 15 минут скинуть Алексею материал", "в 11 отчет директору", "в 13-15 обед", "завтра в 15:10 проследить за письмом", "в среду в 10 в налоговую".
 
-По умолчанию необходимо файлы remind.py и task поместить в папку remindme в домашний каталог (~/remindme/remind.py и ~/remindme/task) и сделать их исполняемыми, например командой chmod +x.
+По умолчанию необходимо файлы remind.py и task поместить в папку remindme в домашний каталог (~/remindme/remind.py и ~/remindme/task) и сделать их исполняемыми, например, командой chmod +x.
 
-"Remindme" написана на Python. В основе "Remindme" лежит программа at и zenity. Они по умолчанию установлены в большинство дистрибутивов Linux.
+"RemindMe" написана на Python. В основе "RemindMe" лежит программа at и zenity. Они по умолчанию установлены в большинство дистрибутивов Linux.
