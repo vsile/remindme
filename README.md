@@ -1,4 +1,7 @@
 remindme
 ========
 
-"Remindme" allows you to create simple reminders in Russian
+"Remindme" allows you to create simple reminders in Russian.
+
+"Remindme" позволяет создавать простые напоминания на русском языке.
+Например "через 15 минут скинуть Алексею материал", "в 11 отчет директору", "в 13-15 обед", "завтра в 15:10 проследить за письмом", "в среду в 10 в налоговую"
