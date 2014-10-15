@@ -13,8 +13,8 @@ def get_args_cmd():
 
 def main():
     filltext = get_args_cmd()
-    loop = 1
-    while loop == 1:
+    loop = True
+    while loop:
         op='zenity --entry --title="Напоминалка" --text="Введите напоминание" --entry-text=%s --width=400' % filltext
         get = commands.getstatusoutput(op)[1] # получаем текст
         text = get+' ' # добавляем в конец пробел, чтобы отрабатывать уведомления типа "напомнить мне через 10 минут". Если бы пробела не было, параметр clock был бы пуст. В параметре clock после слова "час" тоже стоит пробел, чтобы различать поиск "час" и "часов".
@@ -73,12 +73,12 @@ def main():
                 com = commands.getstatusoutput('echo DISPLAY=:0 ~/remindme/task %s | %s' % (out,x))
                 #для отладки, чтобы долго не ждать
                 #com = commands.getstatusoutput('echo DISPLAY=:0 ~/remindme/task %s | at now + 0 min' % out) 
-                loop = 0
+                loop = False
 
             else:
                 error = commands.getstatusoutput('zenity --warning --text="Попробуйте ещё раз.."')
         else:
-            loop = 0
+            loop = False
 
 if __name__ == "__main__":
     main()
