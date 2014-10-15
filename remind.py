@@ -11,6 +11,41 @@ def get_args_cmd():
     args = string.join(sys.argv[1:],'\\ ') # получаем переменную из соседнего файла bash
     return args if args else "Через\ 15\ минут\ "
 
+def replace_all(t, d): # общая функция для подмены переменных
+    for i, j in d.iteritems():
+        t = t.replace(i, j, 1)
+    return t
+
+def get_datex(datex):
+    if datex: # смотрим, есть ли указание на день недели
+        date = datex[0].replace('-','.').replace(',','.') # преобразуем дату в формат 19.08.2014
+        whatdate = date
+        delwhatdate = datex[0]+' '
+    else:
+        whatdate = ''
+        delwhatdate = ''
+    return whatdate, delwhatdate
+
+def get_day(day):
+    if day: # смотрим, есть ли указание на конкретную дату
+        ind = {'завтра':'tomorrow', 'Завтра':'tomorrow', 'понедельник':'mon', 'вторник':'tue', 'среду':'wed', 'четверг':'thu', 'пятницу':'fri', 'субботу':'sat', 'воскресенье':'sun', 'в понедельник':'mon', 'во вторник':'tue', 'в среду':'wed', 'в четверг':'thu', 'в пятницу':'fri', 'в субботу':'sat', 'в воскресенье':'sun'}
+        when = replace_all(day[0], ind)
+        delday = day[0]+' '
+    else:
+        when = ''
+        delday = ''
+    return when, delday
+
+def get_clock(clock):
+    if clock: # смотрим, есть ли указание на часы, минуты, дни
+        clockbank = {'минут ':'min', 'час ':'hour', 'дней ':'days', 'минуту ':'min', 'часа ':'hours', 'дня ':'days', 'минуты ':'min', 'часов ':'hours', 'день ':'days'}
+        how = replace_all(clock[0], clockbank)
+        delclock = clock[0]
+    else:
+        how = ''
+        delclock = ''
+    return (how, delclock)
+
 def main():
     warn_cmd = [
             'zenity',
@@ -48,36 +83,9 @@ def main():
                 else:
                     time = timex+':00'	
 
-                def replace_all(t, d): # общая функция для подмены переменных
-                    for i, j in d.iteritems():
-                        t = t.replace(i, j, 1)
-                    return t
-
-                if datex: # смотрим, есть ли указание на день недели
-                    date = datex[0].replace('-','.').replace(',','.') # преобразуем дату в формат 19.08.2014
-                    whatdate = date
-                    delwhatdate = datex[0]+' '
-                else:
-                    whatdate = ''
-                    delwhatdate = ''
-
-                if day: # смотрим, есть ли указание на конкретную дату
-                    ind = {'завтра':'tomorrow', 'Завтра':'tomorrow', 'понедельник':'mon', 'вторник':'tue', 'среду':'wed', 'четверг':'thu', 'пятницу':'fri', 'субботу':'sat', 'воскресенье':'sun', 'в понедельник':'mon', 'во вторник':'tue', 'в среду':'wed', 'в четверг':'thu', 'в пятницу':'fri', 'в субботу':'sat', 'в воскресенье':'sun'}
-                    when = replace_all(day[0], ind)
-                    delday = day[0]+' '
-                else:
-                    when = ''
-                    delday = ''
-
-
-                if clock: # смотрим, есть ли указание на часы, минуты, дни
-                    clockbank = {'минут ':'min', 'час ':'hour', 'дней ':'days', 'минуту ':'min', 'часа ':'hours', 'дня ':'days', 'минуты ':'min', 'часов ':'hours', 'день ':'days'}
-                    how = replace_all(clock[0], clockbank)
-                    delclock = clock[0]
-
-                else:
-                    how = ''
-                    delclock = ''
+                whatdate, delwhatdate = get_datex(datex)
+                when, delday = get_day(day)
+                how, delclock = get_clock(clock)
 
                 reps = {'ерез':'at now + %s %s' % (timex,how),'В':'at %s %s %s' % (time,when,whatdate),'в':'at %s %s %s' % (time,when,whatdate)}
                 wors = {'Через %s %s' % (what[1],delclock):'','через %s %s' % (what[1],delclock):'','В %s ' % what[1]:'','в %s ' % what[1]:'', '%s' % delday:'', 'Через час':'', 'через час':'', '%s' % delwhatdate:'',} # какие слова мы будем удалять
