@@ -3,19 +3,18 @@
 # RemindMe v1.1 created by Dennis Smal' in 2014 godgrace@mail.ru
 
 import commands
-import string
 import re
 import sys
 
 loop = 1
-arg1=string.join(sys.argv[1:],'\\ ') # получаем переменную из соседнего файла bash
+arg1 = '\\ '.join(sys.argv[1:]) # получаем переменную из соседнего файла bash
 if arg1 == "":
    filltext = "Через\ 15\ минут\ "
 else:
    filltext = arg1
 
 while loop == 1:
-   op='zenity --entry --title="Напоминалка" --text="Введите напоминание" --entry-text=%s --width=400' % filltext
+   op = 'zenity --entry --title="Напоминалка" --text="Введите напоминание" --entry-text=%s --width=400' % filltext
    get = commands.getstatusoutput(op)[1] # получаем текст
    text = get+' ' # добавляем в конец пробел, чтобы отрабатывать уведомления типа "напомнить мне через 10 минут". Если бы пробела не было, параметр clock был бы пуст. В параметре clock после слова "час" тоже стоит пробел, чтобы различать поиск "час" и "часов".
    find = re.findall('ерез [0-9]+|В [0-9:-]+|в [0-9:-]+|ерез час',text)
