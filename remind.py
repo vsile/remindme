@@ -3,12 +3,11 @@
 # RemindMe v1.1 created by Dennis Smal' in 2014 godgrace@mail.ru
 
 import subprocess
-import string
 import re
 import sys
 
 def get_args_cmd():
-    args = string.join(sys.argv[1:],'\\ ') # получаем переменную из соседнего файла bash
+    args = '\\ '.join(sys.argv[1:]) # получаем переменную из соседнего файла bash
     return args if args else "Через 15 минут "
 
 def replace_all(t, d): # общая функция для подмены переменных
