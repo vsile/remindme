@@ -6,14 +6,16 @@ import subprocess
 import re
 import sys
 
-def replace_all(t, d): # общая функция для подмены переменных
+def replace_all(t, d):
+    """Общая функция для подмены переменных"""
     for i, j in d.iteritems():
         t = t.replace(i, j, 1)
     return t
 
 def get_datex(text):
+    """Извлекает из текста дату и подстроку с датой, которую нужно удалить"""
     datex = re.findall(r'\d{2}[.,-]\d{2}[.,-]\d{4}|\d{1}[.,-]\d{2}[.,-]\d{4}',text) # ищем дату в формате 19.08.2014 или 19-08-2014 или 19,08,2014
-    if datex: # смотрим, есть ли указание на конкретную дату
+    if datex:
         date = datex[0].replace('-','.').replace(',','.') # преобразуем дату в формат 19.08.2014
         whatdate = date
         delwhatdate = datex[0]+' '
@@ -23,8 +25,9 @@ def get_datex(text):
     return whatdate, delwhatdate
 
 def get_day(text):
+    """Извлекает из текста день недели и подстроку, которую нужно удалить"""
     day = re.findall('завтра|Завтра|в понедельник|понедельник|во вторник|вторник|в среду|среду|в четверг|четверг|в пятницу|пятницу|в субботу|субботу|в воскресенье|воскресенье',text)
-    if day: # смотрим, есть ли указание на день недели
+    if day:
         ind = {'завтра':'tomorrow', 'Завтра':'tomorrow', 'понедельник':'mon', 'вторник':'tue', 'среду':'wed', 'четверг':'thu', 'пятницу':'fri', 'субботу':'sat', 'воскресенье':'sun', 'в понедельник':'mon', 'во вторник':'tue', 'в среду':'wed', 'в четверг':'thu', 'в пятницу':'fri', 'в субботу':'sat', 'в воскресенье':'sun'}
         when = replace_all(day[0], ind)
         delday = day[0]+' '
@@ -34,6 +37,7 @@ def get_day(text):
     return when, delday
 
 def get_clock(text):
+    """Извлекает из текста время и подстроку, которую нужно удалить"""
     clock = re.findall('минуты |часа |дня |минуту |часов |день |минут |час |дней ',text)
     if clock: # смотрим, есть ли указание на часы, минуты, дни
         clockbank = {'минут ':'min', 'час ':'hour', 'дней ':'days', 'минуту ':'min', 'часа ':'hours', 'дня ':'days', 'минуты ':'min', 'часов ':'hours', 'день ':'days'}
@@ -45,6 +49,7 @@ def get_clock(text):
     return (how, delclock)
 
 def add_task(out, x):
+    """Добавляет напоминание в очередь at"""
     #для отладки, чтобы долго не ждать
     #x = 'at now'
     cmd = 'echo "DISPLAY=:0 ~/remindme/task %s" | %s' % (out, x)
