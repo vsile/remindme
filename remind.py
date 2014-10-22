@@ -6,10 +6,6 @@ import subprocess
 import re
 import sys
 
-def get_args_cmd():
-    args = '\\ '.join(sys.argv[1:]) # получаем переменную из соседнего файла bash
-    return args if args else "Через 15 минут "
-
 def replace_all(t, d): # общая функция для подмены переменных
     for i, j in d.iteritems():
         t = t.replace(i, j, 1)
@@ -54,19 +50,18 @@ def add_task(out, x):
     cmd = 'echo "DISPLAY=:0 ~/remindme/task %s" | %s' % (out, x)
     subprocess.Popen(cmd, shell=True)
 
-def main():
+def main(reminder="Через 15 минут "):
     warn_cmd = [
             'zenity',
             '--warning',
             '--text="Попробуйте ещё раз.."'
             ]
-    filltext = get_args_cmd()
     cmd = [
             'zenity',
             '--entry',
             '--title="Напоминалка"',
             '--text="Введите напоминание"',
-            '--entry-text=%s' % filltext,
+            '--entry-text={}'.format(reminder),
             '--width=400'
             ]
 
@@ -104,4 +99,5 @@ def main():
             loop = False
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) <= 2:
+        main(*sys.argv[1:])
