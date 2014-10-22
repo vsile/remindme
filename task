@@ -5,6 +5,6 @@ zenity --question --title=Напоминание --ok-label=Ok --cancel-label=О
 case $? in 
   0)
   ;; 
-  1) ~/remindme/remind.py "Через 15 минут $*"
+  1) ~/remindme/remind.py "Через 15 минут" "$*"
   ;; 
 esac

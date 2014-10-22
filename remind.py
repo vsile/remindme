@@ -55,7 +55,7 @@ def add_task(out, x):
     cmd = 'echo "DISPLAY=:0 ~/remindme/task %s" | %s' % (out, x)
     subprocess.Popen(cmd, shell=True)
 
-def main(reminder="Через 15 минут "):
+def main(when="Через 15 минут", reminder="позвонить домой"):
     warn_cmd = [
             'zenity',
             '--warning',
@@ -66,7 +66,7 @@ def main(reminder="Через 15 минут "):
             '--entry',
             '--title=Напоминалка',
             '--text=Введите напоминание',
-            '--entry-text={}'.format(reminder),
+            '--entry-text={} {}'.format(when, reminder),
             '--width=400'
             ]
 
@@ -104,11 +104,11 @@ def main(reminder="Через 15 минут "):
             loop = False
 
 def usage():
-    s = "Использование: {} [Время напоминания]".format(__file__)
+    s = "Использование: {} [Время напоминания [Напоминание]]".format(__file__)
     print(s)
 
 if __name__ == "__main__":
-    if len(sys.argv) <= 2:
+    if len(sys.argv) <= 3:
         main(*sys.argv[1:])
     else:
         usage()
