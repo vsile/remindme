@@ -62,8 +62,8 @@ def main(reminder="Через 15 минут "):
     cmd = [
             'zenity',
             '--entry',
-            '--title="Напоминалка"',
-            '--text="Введите напоминание"',
+            '--title=Напоминалка',
+            '--text=Введите напоминание',
             '--entry-text={}'.format(reminder),
             '--width=400'
             ]
