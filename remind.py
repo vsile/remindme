@@ -2,71 +2,71 @@
 # -*- coding: utf-8 -*-
 # RemindMe v1.2 created by Dennis Smal' in 2014 godgrace@mail.ru
 
+from __future__ import print_function
+
 import subprocess
 import re
 import sys
 
-def get_args_cmd():
-    args = '\\ '.join(sys.argv[1:]) # получаем переменную из соседнего файла bash
-    return args if args else "Через 15 минут "
-
-def replace_all(t, d): # общая функция для подмены переменных
+def replace_all(t, d):
+    """Общая функция для подмены переменных"""
     for i, j in d.iteritems():
         t = t.replace(i, j, 1)
     return t
 
 def get_datex(text):
+    """Извлекает из текста дату и подстроку с датой, которую нужно удалить"""
+    whatdate = ''
+    delwhatdate = ''
     datex = re.findall(r'\d{2}[.,-]\d{2}[.,-]\d{4}|\d{1}[.,-]\d{2}[.,-]\d{4}',text) # ищем дату в формате 19.08.2014 или 19-08-2014 или 19,08,2014
-    if datex: # смотрим, есть ли указание на конкретную дату
+    if datex:
         date = datex[0].replace('-','.').replace(',','.') # преобразуем дату в формат 19.08.2014
         whatdate = date
         delwhatdate = datex[0]+' '
-    else:
-        whatdate = ''
-        delwhatdate = ''
     return whatdate, delwhatdate
 
 def get_day(text):
+    """Извлекает из текста день недели и подстроку, которую нужно удалить"""
+    when = ''
+    delday = ''
+
     day = re.findall('завтра|Завтра|в понедельник|понедельник|во вторник|вторник|в среду|среду|в четверг|четверг|в пятницу|пятницу|в субботу|субботу|в воскресенье|воскресенье',text)
-    if day: # смотрим, есть ли указание на день недели
+    if day:
         ind = {'завтра':'tomorrow', 'Завтра':'tomorrow', 'понедельник':'mon', 'вторник':'tue', 'среду':'wed', 'четверг':'thu', 'пятницу':'fri', 'субботу':'sat', 'воскресенье':'sun', 'в понедельник':'mon', 'во вторник':'tue', 'в среду':'wed', 'в четверг':'thu', 'в пятницу':'fri', 'в субботу':'sat', 'в воскресенье':'sun'}
         when = replace_all(day[0], ind)
         delday = day[0]+' '
-    else:
-        when = ''
-        delday = ''
-    return when, delday
+    return (when, delday)
 
 def get_clock(text):
+    """Извлекает из текста время и подстроку, которую нужно удалить"""
+    how = ''
+    delclock = ''
     clock = re.findall('минуты |часа |дня |минуту |часов |день |минут |час |дней ',text)
     if clock: # смотрим, есть ли указание на часы, минуты, дни
         clockbank = {'минут ':'min', 'час ':'hour', 'дней ':'days', 'минуту ':'min', 'часа ':'hours', 'дня ':'days', 'минуты ':'min', 'часов ':'hours', 'день ':'days'}
         how = replace_all(clock[0], clockbank)
         delclock = clock[0]
-    else:
-        how = ''
-        delclock = ''
     return (how, delclock)
 
 def add_task(out, x):
+    """Добавляет напоминание в очередь at"""
     #для отладки, чтобы долго не ждать
     #x = 'at now'
     cmd = 'echo "DISPLAY=:0 ~/remindme/task %s" | %s' % (out, x)
     subprocess.Popen(cmd, shell=True)
 
-def main():
+def main(when="Через 15 минут", reminder="позвонить домой"):
     warn_cmd = [
             'zenity',
             '--warning',
             '--text="Попробуйте ещё раз.."'
             ]
-    filltext = get_args_cmd()
     cmd = [
             'zenity',
             '--entry',
-            '--title="Напоминалка"',
-            '--text="Введите напоминание"',
-            '--entry-text=%s' % filltext,
+            '--title=Напоминалка',
+            '--text=Введите напоминание',
+            '--entry-text={} {}'.format(when, reminder),
             '--width=400'
             ]
 
@@ -103,5 +103,12 @@ def main():
         else:
             loop = False
 
+def usage():
+    s = "Использование: {} [Время напоминания [Напоминание]]".format(__file__)
+    print(s)
+
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) <= 3:
+        main(*sys.argv[1:])
+    else:
+        usage()
