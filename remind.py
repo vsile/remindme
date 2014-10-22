@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 # RemindMe v1.2 created by Dennis Smal' in 2014 godgrace@mail.ru
 
+from __future__ import print_function
+
 import subprocess
 import re
 import sys
@@ -101,6 +103,12 @@ def main(reminder="Через 15 минут "):
         else:
             loop = False
 
+def usage():
+    s = "Использование: {} [Время напоминания]".format(__file__)
+    print(s)
+
 if __name__ == "__main__":
     if len(sys.argv) <= 2:
         main(*sys.argv[1:])
+    else:
+        usage()
