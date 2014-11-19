@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# RemindMe v1.2 created by Dennis Smal' in 2014 godgrace@mail.ru
+# RemindMe v1.4 created by Dennis Smal' in 2014 godgrace@mail.ru
 
 from __future__ import print_function
 
@@ -30,11 +30,16 @@ def get_day(text):
     when = ''
     delday = ''
 
-    day = re.findall('завтра|Завтра|в понедельник|понедельник|во вторник|вторник|в среду|среду|в четверг|четверг|в пятницу|пятницу|в субботу|субботу|в воскресенье|воскресенье',text)
+    day = re.findall('завтра|Завтра|в понедельник|во вторник|в среду|в четверг|в пятницу|в субботу|в воскресенье',text)
+    daywithoutin = re.findall('понедельник|вторник|среда|четверг|пятница|суббота|воскресенье',text)
     if day:
-        ind = {'завтра':'tomorrow', 'Завтра':'tomorrow', 'понедельник':'mon', 'вторник':'tue', 'среду':'wed', 'четверг':'thu', 'пятницу':'fri', 'субботу':'sat', 'воскресенье':'sun', 'в понедельник':'mon', 'во вторник':'tue', 'в среду':'wed', 'в четверг':'thu', 'в пятницу':'fri', 'в субботу':'sat', 'в воскресенье':'sun'}
+        ind = {'завтра':'tomorrow', 'Завтра':'tomorrow', 'в понедельник':'mon', 'во вторник':'tue', 'в среду':'wed', 'в четверг':'thu', 'в пятницу':'fri', 'в субботу':'sat', 'в воскресенье':'sun'}
         when = replace_all(day[0], ind)
         delday = day[0]+' '
+    if daywithoutin:
+	ind = {'понедельник':'mon', 'вторник':'tue', 'среда':'wed', 'четверг':'thu', 'пятница':'fri', 'суббота':'sat', 'воскресенье':'sun'}
+        when = replace_all(daywithoutin[0], ind)
+        delday = daywithoutin[0]+' '
     return (when, delday)
 
 def get_clock(text):
