@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# RemindMe v1.4 created by Dennis Smal' in 2014 godgrace@mail.ru
+# RemindMe v1.5 created by Dennis Smal' in 2014 godgrace@mail.ru
 
 from __future__ import print_function
 
@@ -36,7 +36,7 @@ def get_day(text):
         ind = {'завтра':'tomorrow', 'Завтра':'tomorrow', 'в понедельник':'mon', 'во вторник':'tue', 'в среду':'wed', 'в четверг':'thu', 'в пятницу':'fri', 'в субботу':'sat', 'в воскресенье':'sun'}
         when = replace_all(day[0], ind)
         delday = day[0]+' '
-    if daywithoutin:
+    elif daywithoutin:
 	ind = {'понедельник':'mon', 'вторник':'tue', 'среда':'wed', 'четверг':'thu', 'пятница':'fri', 'суббота':'sat', 'воскресенье':'sun'}
         when = replace_all(daywithoutin[0], ind)
         delday = daywithoutin[0]+' '
@@ -57,6 +57,7 @@ def add_task(out, x):
     """Добавляет напоминание в очередь at"""
     #для отладки, чтобы долго не ждать
     #x = 'at now'
+    #print (x)
     cmd = 'echo "DISPLAY=:0 ~/remindme/task %s" | %s' % (out, x)
     subprocess.Popen(cmd, shell=True)
 
